@@ -1,15 +1,13 @@
 <html>
 <body>
-<html>
-<body>
-{{^user}}
+{{^username}}
 <form action="/login" method="post">
     <input type="text" name="username" placeholder="Enter your name">
     <button type="submit">Login</button>
 </form>
-{{/user}}
+{{/username}}
 
-{{#user}}
+{{#username}}
 <form action="/add-message" method="post">
     <input type="text" name="message" placeholder="Enter your message">
     <button type="submit">Submit</button>
@@ -19,6 +17,17 @@
 </form>
 <br>
 Messages by {{username}}:
-{{/user}}
+<ol>
+    {{#messages}}
+    <li>
+        {{text}}
+        <form action="/delete-message" method="post">
+            <input type="hidden" name="id" value="{{id}}"/>
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+    {{/messages}}
+</ol>
+{{/username}}
 </body>
 </html>
