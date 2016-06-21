@@ -15,17 +15,21 @@
 <form action="logout" method="post">
     <button type="submit">Logout</button>
 </form>
-<br>
 Messages by {{username}}:
 <ol>
     {{#messages}}
-    <li>
-        {{text}}
-        <form action="/delete-message" method="post" style="display: inline-block;">
-            <input type="hidden" name="id" value="{{id}}"/>
-            <button type="submit">Delete</button>
-        </form>
-    </li>
+        {{text}} &nbsp &nbsp <b> <</b>
+    <form action="/delete-message" method="post" style="display: inline-block;">
+        <input type="hidden" name="id" value="{{id}}"/>
+        <button type="submit">Delete</button>
+    </form>
+    <b> ></b> &nbsp &nbsp
+    <form action="/edit-message" method="post" style="display: inline-block;">
+        <input type="hidden" name="id" value="{{id}}"/>
+        <input type="text" name="message" placeholder="Update your message">
+        <button type="submit">Submit</button>
+    </form>
+    <br>
     {{/messages}}
 </ol>
 {{/username}}

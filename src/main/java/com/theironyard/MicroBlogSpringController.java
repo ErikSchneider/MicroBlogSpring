@@ -1,5 +1,6 @@
 package com.theironyard;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,20 +16,21 @@ import java.util.ArrayList;
 @Controller
 public class MicroBlogSpringController {
 
-    ArrayList<Message> messages = new ArrayList<>();
+    @Autowired
+    MessageRepository messages;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String home (Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
         model.addAttribute("username", username);
-        Integer id = 1;
-        for (Message message : messages) {
-            message.id = id;
-            id++;
+        if (username == null) {
+            return "home";
         }
-        model.addAttribute("messages", messages);
+        else {
+            Iterable<Message> msgs = messages.findAll();
+            model.addAttribute("messages", msgs);
 
-
+        }
         return "home";
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
@@ -39,12 +41,18 @@ public class MicroBlogSpringController {
     @RequestMapping(path = "/add-message", method = RequestMethod.POST)
     public String addMessage (String message) {
         Message msg = new Message(message);
-        messages.add(msg);
+        messages.save(msg);
+        return "redirect:/";
+    }
+    @RequestMapping(path = "/edit-message", method = RequestMethod.POST)
+    public String edit(int id, String message) {
+        Message msg = new Message(id, message);
+        messages.save(msg);
         return "redirect:/";
     }
     @RequestMapping(path = "/delete-message", method = RequestMethod.POST)
     public String deleteMessage (Integer id) {
-        messages.remove(id - 1);
+        messages.delete(id);
         return "redirect:/";
     }
 
